@@ -275,7 +275,7 @@ export default function Home() {
         <section className="grid grid-cols-1 md:grid-cols-2 w-10/12 ">
           <div className="flex justify-center items-start">
             <video
-              src="/video.mp4"
+              src="https://res.cloudinary.com/digfhdzck/video/upload/v1716764348/8c4bd364-832a-497a-8d67-db13ecdd3622_zs27wr.mov"
               className="rounded-xl h-[65vh] shadowVideo"
               autoPlay
               muted
