@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <main>
       <div className="fixed flex left-5 bottom-5">
-        <div                 onClick={() => push("https://walink.co/d0f296")}
+        <div                 onClick={() => push("https://walink.co/aaa75b")}
 >
           <svg
             width={50}
@@ -224,7 +224,7 @@ export default function Home() {
               <Button
                 size="lg"
                 className="font-bold"
-                onClick={() => push("https://walink.co/d0f296")}
+                onClick={() => push("https://walink.co/aaa75b")}
               >
                 {" "}
                 <svg
@@ -366,7 +366,7 @@ export default function Home() {
                   
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
-                  <Button onClick={() => push("https://walink.co/d0f296")}>
+                  <Button onClick={() => push("https://walink.co/aaa75b")}>
                     <svg
                       className="  w-[30px] mr-1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -396,7 +396,7 @@ export default function Home() {
                   
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
-                  <Button onClick={() => push("https://walink.co/d0f296")}>
+                  <Button onClick={() => push("https://walink.co/aaa75b")}>
                     <svg
                       className="  w-[30px] mr-1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -425,7 +425,7 @@ export default function Home() {
                   
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
-                  <Button onClick={() => push("https://walink.co/d0f296")}>
+                  <Button onClick={() => push("https://walink.co/aaa75b")}>
                     <svg
                       width={25}
                       className="mr-1"
