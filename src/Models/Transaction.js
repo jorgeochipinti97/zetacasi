@@ -16,7 +16,7 @@ const transactionSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps,
+    timestamps:true,
   }
 );
 

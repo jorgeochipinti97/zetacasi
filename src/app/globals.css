@@ -68,5 +68,5 @@ input[type="text"],
 input[type="number"],
 input[type="email"],
 input[type="password"] {
-  touch-action: manipulation;
+  touch-action: manipulation; /* Prevenir algunos gestos táctiles */
 }

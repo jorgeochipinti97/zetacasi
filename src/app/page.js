@@ -16,7 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -124,6 +124,26 @@ export default function Home() {
       });
     }
   };
+
+
+
+  useEffect(() => {
+    const handleTouchStart = (event) => {
+      if (event.target.tagName === 'INPUT') {
+        event.preventDefault(); // Prevenir el zoom táctil
+        event.target.focus(); // Asegurar el enfoque del input
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, []);
+
+
   return (
     <main>
       <div className="fixed flex left-5 bottom-5">
