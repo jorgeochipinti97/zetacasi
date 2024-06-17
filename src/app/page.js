@@ -1,61 +1,140 @@
 "use client";
 import { Button } from "@/components/ui/button";
 
+import { Card, CardContent } from "@/components/ui/card";
+
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import axios from 'axios'
+import { useRef, useState } from "react";
+import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
   const { push } = useRouter();
-  const { toast } = useToast()
-
+  const { toast } = useToast();
+  const refOpenTransaction = useRef();
+  const refInput = useRef();
   const [form, setForm] = useState({
-    nombre: "",
-    celular: "",
-    email: "",
-    pais: "",
+    user: "",
+    password: "",
+  });
+  const [formTransaction, setFormTransaction] = useState({
+    user: "",
+    url: "",
+    phone: "",
   });
 
-  const handleChange = (e) => {
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    toast({
+      title: "Aguarde por favor, imagen subiendose",
+    });
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default");
+
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dwvuskmlb/image/upload",
+        formData
+      );
+      const data = response.data;
+
+      if (data.secure_url) {
+        setFormTransaction((prevFormTransaction) => ({
+          ...prevFormTransaction,
+          url: data.secure_url,
+        }));
+        toast({
+          title: "Comprobante cargado con éxito",
+          description: "¡Estás muy cerca de jugar!",
+        });
+      }
+    } catch (er) {
+      console.log(er);
+    }
+  };
+  const handleTransactionChange = (e) => {
+    setFormTransaction({
+      ...formTransaction,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleUserChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleUserSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/people", form);
+      const res = await axios.post("/api/user", form);
       if (res.status === 201) {
-        setForm({ nombre: '', celular: '', email: '', pais: '' }); // Reset the form
+        setForm({
+          user: "",
+          password: "",
+        }); // Reset the
         toast({
-          title: "Información enviada",
-          description: "Gracias por confiar en Casino Zeta",
-          action: <ToastAction onClick={()=>push('')}>Empezar ahora</ToastAction>,
-
-        })
+          title: "Usuario creado",
+          description: "¡Ahora es momento de cargar!",
+        });
       }
-      console.log(form);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleSendTransaction = async () => {
+    const { user, url, phone } = formTransaction;
+    if (!user || !url || !phone) {
+      toast({
+        title: "Error, complete los campos por favor.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const data = axios.post("/api/transaction", formTransaction);
+    if (data) {
+      toast({
+        title: "Muchas gracias por confiar en Casino Zeta",
+        description: "En pocos minutos estarás jugando",
+      });
+      setFormTransaction({
+        user: "",
+        url: "",
+        phone: "",
+      });
     }
   };
   return (
     <main>
       <div className="fixed flex left-5 bottom-5">
-        <div                 onClick={() => push("https://walink.co/aaa75b")}
->
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="hidden"
+          ref={refInput}
+        />
+
+        <div onClick={() => push("https://walink.co/aaa75b")}>
           <svg
             width={50}
             xmlns="http://www.w3.org/2000/svg"
@@ -221,50 +300,153 @@ export default function Home() {
               Y gana ilimitadamente
             </p>
             <div className="mt-5">
-              <Button
-                size="lg"
-                className="font-bold"
-                onClick={() => push("https://walink.co/aaa75b")}
-              >
-                {" "}
-                <svg
-                  className="mr-2"
-                  width={32}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000"
-                  version="1.1"
-                  viewBox="0 0 32 32"
-                >
-                  <g>
-                    <g
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="lg"
+                    className="font-bold"
+                    ref={refOpenTransaction}
+                    // onClick={() => push("https://walink.co/aaa75b")}
+                  >
+                    {" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       fill="#000"
-                      fillRule="evenodd"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeMiterlimit="4.1"
-                      color="#000"
-                      transform="translate(-204 -292)"
+                      className="mr-2"
+                      width={25}
+                      version="1.1"
+                      viewBox="0 0 477.778 477.778"
+                      xmlSpace="preserve"
                     >
-                      <path
-                        d="M232.42 306.895c-.642 0-1.284.24-1.768.724l-2.933 2.936a2.485 2.485 0 00-1.455-1.08l-6.924-1.856a4.1 4.1 0 00-1.676-.092 4.096 4.096 0 00-1.572.584l-4.322 2.727-.35-.608a1.621 1.621 0 00-2.19-.585l-3.287 1.896a1.621 1.621 0 00-.586 2.19l4.899 8.482a1.62 1.62 0 002.187.588l3.287-1.899a1.622 1.622 0 00.588-2.19l-.064-.112 1.873-1.266 6.89 1.355c.945.186 1.789-.077 2.461-.765a531.235 531.235 0 016.706-6.764 1 1 0 00.006-.004 2.519 2.519 0 000-3.537 2.496 2.496 0 00-1.77-.725zm0 1.982a.5.5 0 01.353.156.48.48 0 010 .71 533.533 533.533 0 00-6.724 6.784c-.041.042-.588.21-.645.2l-7.299-1.434a1 1 0 00-.753.152l-2.1 1.42-2.48-4.295 4.386-2.765a2.1 2.1 0 011.664-.254l6.924 1.855a.48.48 0 01.354.614.48.48 0 01-.614.353l-4.345-1.164a1 1 0 00-1.225.707 1 1 0 00.707 1.225l4.346 1.164a2.52 2.52 0 002.592-.852 1 1 0 00.263-.176l4.242-4.244a.5.5 0 01.354-.156zm-22.533 2.697l.484.84a1 1 0 00.139.4 1 1 0 00.238.252l3.639 6.303-2.598 1.5-4.5-7.795z"
-                        style={{ InkscapeStroke: "none" }}
-                      ></path>
-                      <path
-                        d="M224 301.014a1 1 0 00-1 1 1 1 0 001 1h2a1 1 0 001-1 1 1 0 00-1-1z"
-                        style={{ InkscapeStroke: "none" }}
-                      ></path>
-                      <path
-                        d="M224 297.014a1 1 0 00-1 1 1 1 0 001 1h2a1 1 0 001-1 1 1 0 00-1-1z"
-                        style={{ InkscapeStroke: "none" }}
-                      ></path>
-                      <path
-                        d="M225 293.014c-3.854 0-7 3.146-7 7s3.146 7 7 7 7-3.146 7-7-3.146-7-7-7zm0 2c2.773 0 5 2.226 5 5 0 2.773-2.227 5-5 5s-5-2.227-5-5c0-2.774 2.227-5 5-5z"
-                        style={{ InkscapeStroke: "none" }}
-                      ></path>
-                    </g>
-                  </g>
-                </svg>
-                Jugar ahora
+                      <g>
+                        <path d="M461.4 152.432c-9.782-25.141-23.593-48.221-40.81-68.392-35.632-41.776-85.384-70.96-141.886-80.455C265.732 1.4 252.482 0 238.889 0c-13.594 0-26.845 1.4-39.815 3.585-56.503 9.495-106.24 38.671-141.887 80.439-17.202 20.18-31.013 43.252-40.794 68.392C5.94 179.261 0 208.351 0 238.889c0 28.065 5.085 54.878 13.981 79.894 9.051 25.445 22.131 48.945 38.726 69.592 35.881 44.636 87.452 75.919 146.367 85.818 12.97 2.185 26.221 3.585 39.815 3.585 13.593 0 26.843-1.4 39.815-3.585 58.913-9.9 110.486-41.183 146.366-85.812 16.595-20.645 29.675-44.145 38.725-69.59 8.896-25.016 13.983-51.837 13.983-79.902 0-30.53-5.942-59.62-16.378-86.457zM433.375 168.6L391.6 192.713c-7.915-26.128-22.365-49.41-41.447-68.012l42.162-24.34c17.808 19.706 31.837 42.794 41.06 68.239zm-66.752 70.289c0 70.431-57.297 127.734-127.734 127.734-70.439 0-127.735-57.303-127.735-127.734 0-70.429 57.297-127.734 127.735-127.734 70.437 0 127.734 57.305 127.734 127.734zM238.889 31.852c13.623 0 26.921 1.408 39.815 3.927v48.757c-12.754-3.297-26.052-5.233-39.815-5.233-13.765 0-27.063 1.937-39.815 5.233V35.779c12.892-2.519 26.19-3.927 39.815-3.927zM85.476 100.354l42.164 24.347c-19.082 18.594-33.546 41.876-41.463 68.004l-41.775-24.113c9.238-25.445 23.267-48.533 41.074-68.238zM41.992 302.609l42.396-24.472c6.75 26.556 20.11 50.438 38.321 69.824l-41.992 24.238c-17.091-20.257-30.358-43.811-38.725-69.59zm196.897 143.317c-13.625 0-26.923-1.408-39.815-3.927v-48.757c12.752 3.298 26.05 5.233 39.815 5.233 13.763 0 27.061-1.935 39.815-5.233v48.757c-12.894 2.519-26.192 3.927-39.815 3.927zm158.154-73.727l-41.976-24.238c18.211-19.379 31.572-43.268 38.321-69.824l42.396 24.48c-8.367 25.771-21.633 49.325-38.741 69.582z"></path>
+                        <path d="M252.388 221.533c-20.312-7.644-28.664-12.66-28.664-20.546 0-6.687 5.009-13.374 20.545-13.374 8.958 0 16.238 1.486 22.024 3.289a12.588 12.588 0 009.86-1.042 12.53 12.53 0 006.034-7.847l.218-.823c1.943-7.613-2.629-15.375-10.25-17.342-5.848-1.516-12.8-2.62-21.197-2.994v-8.969c0-6.096-4.518-11.429-10.587-11.997-6.96-.651-12.821 4.817-12.821 11.651v10.987c-25.567 5.015-40.374 21.501-40.374 42.52 0 23.174 17.434 35.118 43.003 43.718 17.669 5.972 25.319 11.704 25.319 20.778 0 9.557-9.315 14.815-22.94 14.815-9.751 0-18.944-1.983-26.921-4.813a12.588 12.588 0 00-10.142.761 12.551 12.551 0 00-6.283 7.995l-.108.405c-2.084 8.141 2.612 16.469 10.653 18.896 7.885 2.371 17.156 4.043 26.595 4.464v10.669c0 6.464 5.24 11.704 11.704 11.704s11.704-5.24 11.704-11.704v-12.341c27.466-4.775 42.521-22.933 42.521-44.193 0-21.493-11.462-34.635-39.893-44.667z"></path>
+                      </g>
+                    </svg>
+                    Cargar fichas
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <div className="flex justify-center">
+                    <ScrollArea className="h-[70vh] w-12/12  ">
+                      <DialogHeader className={"text-center"}>
+                        <DialogTitle className="tracking-tighter font-geist text-2xl">
+                          ¿Dónde cargar?
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="flex justify-center mt-5 ">
+                        <div className="border-[2px] w-fit p-5 border-green-700 border-dashed rounded-xl">
+                          <p className=" text-center font-geist tracking-tighter ">
+                            Alias <br />
+                            <span className="font-bold uppercase opacity-[.8]">
+                              {" "}
+                              cra.carnes
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="m-5">
+                        <span className="flex mt-3 items-center font-geist tracking-tighter font-bold bg-violet-200 w-fit p-2 rounded-xl">
+                          Si es tu primera carga obtenés un 50% por única vez
+                        </span>
+                        <span className="flex mt-3 items-center font-geist tracking-tighter font-bold bg-green-200 w-fit p-2 rounded-xl">
+                          Recibiras una bonificacion dependiendo el monto de la
+                          carga.{" "}
+                        </span>
+                        <span className="flex mt-3 items-start font-geist tracking-tighter font-bold bg-gray-200 w-fit p-2 rounded-xl">
+                          Puede existir una demora de 10 minutos
+                        </span>
+                        <div className="mb-5 mt-5">
+                          <Input
+                            className="border-2 border-black my-3 w-9/12 "
+                            placeholder="Usuario"
+                            name="user"
+                            onChange={handleTransactionChange}
+                          />
+                          <Input
+                            className="border-2 border-black mt-3 w-9/12 "
+                            placeholder="Celular"
+                            name="phone"
+                            onChange={handleTransactionChange}
+                          />
+                          <p className="text-xs font-semibold font-mono opacity-[.7] mt-1 mb-5">
+                            Donde te avisaremos cuando la carga se realice con
+                            éxito.
+                          </p>
+
+                          <Button
+                            onClick={() => refInput.current.click()}
+                            variant="outline"
+                            className={`border border-black ${
+                              formTransaction.url && "opacity-[80%]"
+                            }`}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              width={20}
+                              className="mr-2"
+                            >
+                              <g
+                                stroke="#000"
+                                strokeLinecap="round"
+                                strokeWidth="1.5"
+                              >
+                                <path d="M17 9.002c2.175.012 3.353.109 4.121.877C22 10.758 22 12.172 22 15v1c0 2.829 0 4.243-.879 5.122C20.243 22 18.828 22 16 22H8c-2.828 0-4.243 0-5.121-.878C2 20.242 2 18.829 2 16v-1c0-2.828 0-4.242.879-5.121.768-.768 1.946-.865 4.121-.877"></path>
+                                <path
+                                  strokeLinejoin="round"
+                                  d="M12 15V2m0 0l3 3.5M12 2L9 5.5"
+                                ></path>
+                              </g>
+                            </svg>
+                            {formTransaction.url
+                              ? "Subir otro comprobante"
+                              : " Sube tu comprobante aquí"}
+                          </Button>
+                        </div>
+                        <div className="flex justify-start">
+                          <Button
+                            disabled={
+                              !formTransaction.user ||
+                              !formTransaction.url ||
+                              !formTransaction.phone
+                            }
+                            onClick={handleSendTransaction}
+                            className="tracking-tighter font-geist"
+                          >
+                            {" "}
+                            <svg
+                              width={25}
+                              className="mr-1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke="#000"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M11.5 12H5.42m-.173.797L4.242 15.8c-.55 1.643-.826 2.465-.628 2.971.171.44.54.773.994.9.523.146 1.314-.21 2.894-.92l10.135-4.561c1.543-.695 2.314-1.042 2.553-1.524a1.5 1.5 0 000-1.33c-.239-.482-1.01-.83-2.553-1.524L7.485 5.243c-1.576-.71-2.364-1.064-2.887-.918a1.5 1.5 0 00-.994.897c-.198.505.074 1.325.618 2.966l1.026 3.091c.094.282.14.423.159.567a1.5 1.5 0 010 .385c-.02.144-.066.285-.16.566z"
+                              ></path>
+                            </svg>
+                            Enviar
+                          </Button>
+                        </div>
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="mt-5">
+              <Button
+                variant="outline"
+                className="border border-black"
+                onClick={() => push("/#user")}
+              >
+                Aún no tengo usuario
               </Button>
             </div>
           </div>
@@ -283,43 +465,31 @@ export default function Home() {
               loop
             />
           </div>
-          <div className="flex justify-center flex-col mt-10 md:mt-0 items-center ">
+          <div className="flex justify-center flex-col my-10 md:mt-0 items-center ">
             <Card className="shadowVideo">
               <CardContent>
-                <p className="text-black font-bold text-3xl  p-10 text-center ">
-                  Mantengamos contacto
+                <p className="text-black font-bold text-3xl tracking-tighter font-geist  pt-10 text-center ">
+                  Registrate y comenzá a jugar
                 </p>
-                <form className="" onSubmit={handleSubmit}>
+                <form className="" onSubmit={handleUserSubmit}>
                   <Input
                     className="my-2"
-                    name="nombre"
-                    placeholder="Nombre"
-                    value={form.nombre}
-                    onChange={handleChange}
+                    name="user"
+                    id="user"
+                    placeholder="Nombre de usuario"
+                    value={form.user}
+                    onChange={handleUserChange}
                   />
                   <Input
                     className="my-2"
-                    name="celular"
-                    placeholder="Celular"
+                    name="password"
+                    type="password"
+                    placeholder="Contraseña"
                     value={form.celular}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    className="my-2"
-                    name="email"
-                    placeholder="Email"
-                    value={form.email}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    className="my-2"
-                    name="pais"
-                    placeholder="País"
-                    value={form.pais}
-                    onChange={handleChange}
+                    onChange={handleUserChange}
                   />
                   <Button
-                    className="mt-5"
+                    className="mt-2"
                     // onClick={() => push("https://walink.co/d0f296")}
                   >
                     <svg
@@ -340,12 +510,32 @@ export default function Home() {
                     Enviar
                   </Button>
                 </form>
+                <div className=" h-[.1vh] bg-black w-full  mt-5 rounded-full" />
+                <p className="text-md tracking-tighter py-5">
+                  ¿Dónde jugar?
+                  <br />{" "}
+                  <span className="font-bold">
+                    {" "}
+                    <a href="https://casinozeus.io/">Casino Zeus</a>
+                  </span>
+                </p>
+
+                <span className=" mb-5 tracking-tighter font-geist">
+                  {" "}
+                  Si ya tenés usuario puedes cargar tus fichas{" "}
+                  <a
+                    className=" font-bold"
+                    onClick={() => refOpenTransaction.current.click()}
+                  >
+                    aquí
+                  </a>
+                </span>
               </CardContent>
             </Card>
           </div>
         </section>
       </div>
-      <section
+      {/* <section
         className="bg-black py-20"
         style={{
           backgroundImage:
@@ -362,8 +552,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Card className="w-10/12 mt-10">
                 <CardHeader>
-                  <CardTitle className='text-center'>Registrarse</CardTitle>
-                  
+                  <CardTitle className="text-center">Registrarse</CardTitle>
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
                   <Button onClick={() => push("https://walink.co/aaa75b")}>
@@ -392,8 +581,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Card className="w-10/12 mt-10">
                 <CardHeader>
-                  <CardTitle className='text-center'>Recargar</CardTitle>
-                  
+                  <CardTitle className="text-center">Recargar</CardTitle>
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
                   <Button onClick={() => push("https://walink.co/aaa75b")}>
@@ -421,8 +609,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Card className="w-10/12 mt-10">
                 <CardHeader>
-                  <CardTitle className='text-center'>Ganá</CardTitle>
-                  
+                  <CardTitle className="text-center">Ganá</CardTitle>
                 </CardHeader>
                 <CardFooter className="flex justify-center mx-2">
                   <Button onClick={() => push("https://walink.co/aaa75b")}>
@@ -449,7 +636,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
