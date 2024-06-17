@@ -362,12 +362,14 @@ export default function Home() {
                             placeholder="Usuario"
                             name="user"
                             onChange={handleTransactionChange}
+                            value={formTransaction.user}
                           />
                           <Input
                             className="border-2 border-black mt-3 w-9/12 "
                             placeholder="Celular"
                             name="phone"
                             onChange={handleTransactionChange}
+                            value={formTransaction.phone}
                           />
                           <p className="text-xs font-semibold font-mono opacity-[.7] mt-1 mb-5">
                             Donde te avisaremos cuando la carga se realice con
