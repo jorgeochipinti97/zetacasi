@@ -1,5 +1,7 @@
 // components/Login.js
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
@@ -15,16 +17,16 @@ const Login = ({ onLogin }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <input
+      <Input
         type="password"
         placeholder="Ingrese la contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="mb-4 p-2 border-2"
+        className="mb-4 p-2 border-2 w-6/12"
       />
-      <button onClick={handleLogin} className="p-2 bg-blue-500 text-white">
+      <Button onClick={handleLogin} className='bg-black text-white'>
         Iniciar sesión
-      </button>
+      </Button>
     </div>
   );
 };
