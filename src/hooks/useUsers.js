@@ -8,8 +8,9 @@ const useUsers = () => {
   const [error, setError] = useState(null);
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("/api/users");
+      const response = await axios.get("/api/user");
       setUsers(response.data.data);
+      
     } catch (error) {
       setError(error.message);
     } finally {

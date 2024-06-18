@@ -6,8 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,8 +17,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
-import { Label } from "@/components/ui/label";
 
 export default function Home() {
   const { push } = useRouter();
@@ -110,8 +106,8 @@ export default function Home() {
       });
       return;
     }
-
-    const data = axios.post("/api/transaction", formTransaction);
+    // console.log(formTransaction);
+    const data = await axios.post("/api/transaction", formTransaction);
     if (data) {
       toast({
         title: "Muchas gracias por confiar en Casino Zeta",
@@ -122,27 +118,45 @@ export default function Home() {
         url: "",
         phone: "",
       });
+      console.log(data);
     }
   };
 
-
+  const messages = [
+    "¡Carga tus fichas y sigue ganando!",
+    "¡Cada ficha cuenta, no te detengas!",
+    "¡Tus fichas te acercan al éxito!",
+    "¡Llena tu cuenta de fichas y alcanza tus metas!",
+    "¡Más fichas, más oportunidades!",
+    "¡Carga fichas y domina el juego!",
+    "¡Cada ficha es un paso hacia la victoria!",
+    "¡No te quedes sin fichas, sigue adelante!",
+    "¡Tus fichas son la clave del éxito!",
+    "¡Carga fichas y demuestra tu habilidad!"
+  ];
 
   useEffect(() => {
-    const handleTouchStart = (event) => {
-      if (event.target.tagName === 'INPUT') {
-        event.preventDefault(); // Prevenir el zoom táctil
-        event.target.focus(); // Asegurar el enfoque del input
-      }
+    const showToast = () => {
+      const randomMessage =
+        messages[Math.floor(Math.random() * messages.length)];
+
+      toast({
+        title: randomMessage,
+
+      });
     };
 
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    const timeout = setTimeout(() => {
+      showToast(); // Show initial toast after 5 seconds
+      const interval = setInterval(showToast, 15000); // 15000 ms = 15 segundos
 
-    // Cleanup event listener on component unmount
-    return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-    };
+      // Cleanup interval on component unmount
+      return () => clearInterval(interval);
+    }, 5000); // 5000 ms = 5 segundos
+
+    // Cleanup timeout on component unmount
+    return () => clearTimeout(timeout);
   }, []);
-
 
   return (
     <main>
@@ -384,6 +398,9 @@ export default function Home() {
                             onChange={handleTransactionChange}
                             value={formTransaction.user}
                           />
+                          <p className="text-xs font-semibold font-mono opacity-[.7] mt-1 mb-5">
+                            Asegurate de escribirlo correctamente
+                          </p>
                           <Input
                             className="border-2 border-black mt-3 w-9/12 "
                             placeholder="Celular"

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const transactions = await Transaction.find();
+        const transactions = await Transaction.find().sort({ createdAt: -1 });
         res.status(201).json({ success: true, data: transactions });
       } catch (error) {
         res.status(400).json({ success: false });
