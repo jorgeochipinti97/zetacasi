@@ -81,12 +81,15 @@ export default function Home() {
   const handleUserSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(form);
       const res = await axios.post("/api/user", form);
       if (res.status === 201) {
         setForm({
           user: "",
           password: "",
+          phone: "",
         }); // Reset the
+        console.log(res);
         toast({
           title: "Usuario creado",
           description: "¡Ahora es momento de cargar!",
@@ -132,7 +135,7 @@ export default function Home() {
     "¡Cada ficha es un paso hacia la victoria!",
     "¡No te quedes sin fichas, sigue adelante!",
     "¡Tus fichas son la clave del éxito!",
-    "¡Carga fichas y demuestra tu habilidad!"
+    "¡Carga fichas y demuestra tu habilidad!",
   ];
 
   useEffect(() => {
@@ -142,7 +145,6 @@ export default function Home() {
 
       toast({
         title: randomMessage,
-
       });
     };
 
@@ -524,9 +526,19 @@ export default function Home() {
                     name="password"
                     type="password"
                     placeholder="Contraseña"
+                    value={form.password}
+                    onChange={handleUserChange}
+                  />
+                  <Input
+                    className="my-2"
+                    name="phone"
+                    placeholder="Celular"
                     value={form.celular}
                     onChange={handleUserChange}
                   />
+                  <p className="font-bold tracking-tighter text-xs opacity-50">
+                    Aquí te avisaremos cuando tu usuario este listo para jugar
+                  </p>
                   <Button
                     className="mt-2"
                     // onClick={() => push("https://walink.co/d0f296")}

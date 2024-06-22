@@ -66,8 +66,9 @@ const Page = () => {
                 <TableRow>
                   <TableHead className="">usuario</TableHead>
                   <TableHead>Contraseña</TableHead>
+                  <TableHead className="">Celular</TableHead>
                   <TableHead className="">Creación</TableHead>
-                  <TableHead></TableHead>
+
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -75,6 +76,7 @@ const Page = () => {
                   <TableRow key={user._id}>
                     <TableCell className="font-medium">{user.user}</TableCell>
                     <TableCell>{user.password}</TableCell>
+                    <TableCell>{user.phone}</TableCell>
                     <TableCell className="w-[300px]">
                       {" "}
                       {formatDate(user.createdAt)}
