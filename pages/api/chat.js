@@ -1,16 +1,6 @@
 import OpenAI from "openai";
-import rateLimiterMiddleware from '../../middleware/rateLimiter';
 
 export default async function handler(req, res) {
-
-  await new Promise((resolve) => {
-    rateLimiterMiddleware(req, res, resolve);
-  });
-
-  if (res.headersSent) {
-    return; 
-  }
-
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
