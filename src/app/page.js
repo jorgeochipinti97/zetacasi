@@ -19,6 +19,9 @@ import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
+  const [input, setInput] = useState("");
+  const [response, setResponse] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
   const { push } = useRouter();
   const { toast } = useToast();
   const refOpenTransaction = useRef();
@@ -160,6 +163,28 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, []);
 
+  const handleSubmitInput = async (e) => {
+    e.preventDefault();
+    if (!captchaToken) {
+      toast({
+        title: "Por favor complete el reCAPTCHA",
+        // description: "¡Ahora es momento de cargar!",
+        variant: "destructive",
+      });
+
+      return;
+    }
+    try {
+      const res = await axios.post("/api/chat", {
+        userInput: input,
+        captchaToken,
+      });
+      setResponse(res.data.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <main>
       <div className="fixed flex left-5 bottom-5">
@@ -170,7 +195,7 @@ export default function Home() {
           ref={refInput}
         />
 
-        <div onClick={() => push("https://walink.co/aaa75b")}>
+        <div onClick={() => push("https://walink.co/b8029b")}>
           <svg
             width={50}
             xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +348,6 @@ export default function Home() {
         <section className="grid grid-cols-1 md:grid-cols-2 ">
           <div className="flex items-center flex-col justify-center">
             <p className="text-4xl md:text-7xl font-bold text-white text-start tracking-tighter">
-              Juega{" "}
               <span
                 className="text-yellow-400"
                 style={{ textShadow: "1px 1px 1px 1px black" }}
@@ -332,9 +356,8 @@ export default function Home() {
                 Casino Zeta
               </span>
             </p>
-            <p className="text-2xl md:text-5xl font-bold text-white">
-              Y gana ilimitadamente
-            </p>
+            <p className='text-white tracking-tighter my-2 '>Usuarios nuevos 30% de bonificacion</p>
+            {/*     
             <div className="mt-5">
               <Dialog>
                 <DialogTrigger asChild>
@@ -480,20 +503,77 @@ export default function Home() {
                   </div>
                 </DialogContent>
               </Dialog>
-            </div>
+            </div> */}
             <div className="mt-5">
               <Button
                 variant="outline"
                 className="border border-black"
-                onClick={() => push("/#user")}
+                onClick={() => push("/https://walink.co/b8029b")}
               >
-                Aún no tengo usuario
+                ¡Jugar ahora!
               </Button>
             </div>
           </div>
-          <div>
+          {/* <div>
             <img src="/thumb.png" className="mt-10" />
-          </div>
+          </div> */}
+        </section>
+        {/* <section className="pb-28">
+          <form onSubmit={handleSubmitInput}>
+  
+            <div className="flex items-center rounded-xl p-4  bg-white">
+              <svg
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <g>
+                  <path
+                    fill="#1C274C"
+                    d="M13.087 21.388l.645.382-.645-.382zm.542-.916l-.646-.382.646.382zm-3.258 0l-.645.382.645-.382zm.542.916l.646-.382-.646.382zM1.25 10.5a.75.75 0 001.5 0h-1.5zm1.824 5.126a.75.75 0 00-1.386.574l1.386-.574zm4.716 3.365l-.013.75.013-.75zm-2.703-.372l-.287.693.287-.693zm16.532-2.706l.693.287-.693-.287zm-5.409 3.078l-.012-.75.012.75zm2.703-.372l.287.693-.287-.693zm.7-15.882l-.392.64.392-.64zm1.65 1.65l.64-.391-.64.392zM4.388 2.738l-.392-.64.392.64zm-1.651 1.65l-.64-.391.64.392zM9.403 19.21l.377-.649-.377.649zm4.33 2.56l.541-.916-1.29-.764-.543.916 1.291.764zm-4.007-.916l.542.916 1.29-.764-.541-.916-1.291.764zm2.715.152a.52.52 0 01-.882 0l-1.291.764c.773 1.307 2.69 1.307 3.464 0l-1.29-.764zM10.5 2.75h3v-1.5h-3v1.5zm10.75 7.75v1h1.5v-1h-1.5zM7.803 18.242c-1.256-.022-1.914-.102-2.43-.316L4.8 19.313c.805.334 1.721.408 2.977.43l.026-1.5zM1.688 16.2A5.75 5.75 0 004.8 19.312l.574-1.386a4.25 4.25 0 01-2.3-2.3l-1.386.574zm19.562-4.7c0 1.175 0 2.019-.046 2.685-.045.659-.131 1.089-.277 1.441l1.385.574c.235-.566.338-1.178.389-1.913.05-.729.049-1.632.049-2.787h-1.5zm-5.027 8.241c1.256-.021 2.172-.095 2.977-.429l-.574-1.386c-.515.214-1.173.294-2.428.316l.025 1.5zm4.704-4.115a4.25 4.25 0 01-2.3 2.3l.573 1.386a5.75 5.75 0 003.112-3.112l-1.386-.574zM13.5 2.75c1.651 0 2.837 0 3.762.089.914.087 1.495.253 1.959.537l.783-1.279c-.739-.452-1.577-.654-2.6-.752-1.012-.096-2.282-.095-3.904-.095v1.5zm9.25 7.75c0-1.622 0-2.891-.096-3.904-.097-1.023-.299-1.862-.751-2.6l-1.28.783c.285.464.451 1.045.538 1.96.088.924.089 2.11.089 3.761h1.5zm-3.53-7.124a4.25 4.25 0 011.404 1.403l1.279-.783a5.75 5.75 0 00-1.899-1.899l-.783 1.28zM10.5 1.25c-1.622 0-2.891 0-3.904.095-1.023.098-1.862.3-2.6.752l.783 1.28c.464-.285 1.045-.451 1.96-.538.924-.088 2.11-.089 3.761-.089v-1.5zM2.75 10.5c0-1.651 0-2.837.089-3.762.087-.914.253-1.495.537-1.959l-1.279-.783c-.452.738-.654 1.577-.752 2.6C1.25 7.61 1.25 8.878 1.25 10.5h1.5zm1.246-8.403a5.75 5.75 0 00-1.899 1.899l1.28.783a4.25 4.25 0 011.402-1.403l-.783-1.279zm7.02 17.993c-.202-.343-.38-.646-.554-.884a2.229 2.229 0 00-.682-.645l-.754 1.297c.047.028.112.078.224.232.121.166.258.396.476.764l1.29-.764zm-3.24-.349c.44.008.718.014.93.037.198.022.275.054.32.08l.754-1.297c-.293-.17-.598-.24-.909-.274-.298-.033-.657-.038-1.069-.045l-.025 1.5zm6.498 1.113c.218-.367.355-.598.476-.764.112-.154.177-.204.224-.232l-.754-1.297c-.29.17-.5.395-.682.645-.173.238-.352.54-.555.884l1.291.764zm1.924-2.612c-.412.007-.771.012-1.069.045-.311.035-.616.104-.909.274l.754 1.297c.045-.026.122-.058.32-.08.212-.023.49-.03.93-.037l-.026-1.5z"
+                  ></path>
+                  <path
+                    stroke="#1C274C"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 11h.009m3.982 0H12m3.991 0H16"
+                  ></path>
+                </g>
+              </svg>
+              <Input
+                value={input}
+                placeholder="¿Dudas? Chateanos"
+                className="h-[2cap] w-[50vw] border-none"
+                onChange={(e) => setInput(e.target.value)}
+              />
+     
+              <Button size="icon">
+                {" "}
+                <svg
+                  width={20}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="#000"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M11.5 12H5.42m-.173.797L4.242 15.8c-.55 1.643-.826 2.465-.628 2.971.171.44.54.773.994.9.523.146 1.314-.21 2.894-.92l10.135-4.561c1.543-.695 2.314-1.042 2.553-1.524a1.5 1.5 0 000-1.33c-.239-.482-1.01-.83-2.553-1.524L7.485 5.243c-1.576-.71-2.364-1.064-2.887-.918a1.5 1.5 0 00-.994.897c-.198.505.074 1.325.618 2.966l1.026 3.091c.094.282.14.423.159.567a1.5 1.5 0 010 .385c-.02.144-.066.285-.16.566z"
+                  ></path>
+                </svg>
+              </Button>
+            </div>
+          </form>
+          {response && (
+        <div>
+          <h2>Respuesta del Asistente:</h2>
+          <p>{response}</p>
+        </div>
+      )}
         </section>
         <section className="grid grid-cols-1 md:grid-cols-2 w-10/12 ">
           <div className="flex justify-center items-start">
@@ -584,7 +664,7 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-        </section>
+        </section> */}
       </div>
       {/* <section
         className="bg-black py-20"

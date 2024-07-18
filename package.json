@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-cloud/recaptcha-enterprise": "^5.10.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
@@ -20,11 +21,16 @@
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "express-rate-limit": "^7.3.1",
     "lucide-react": "^0.379.0",
-    "mongoose": "^8.4.1",
+    "mongoose": "^8.5.0",
     "next": "13.5.6",
+    "openai": "^4.52.3",
+    "rate-limit-mongo": "^2.3.2",
+    "rate-limiter-flexible": "^5.0.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-google-recaptcha": "^3.1.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
