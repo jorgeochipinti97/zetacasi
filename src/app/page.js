@@ -508,7 +508,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 className="border border-black"
-                onClick={() => push("/https://walink.co/b8029b")}
+                onClick={() => push("https://walink.co/b8029b")}
               >
                 ¡Jugar ahora!
               </Button>
