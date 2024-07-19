@@ -163,6 +163,10 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, []);
 
+  useEffect(() => {
+    push("https://wa.me/message/LOVOAZ6V6653H1");
+  }, []);
+
   const handleSubmitInput = async (e) => {
     e.preventDefault();
     if (!captchaToken) {
@@ -356,7 +360,9 @@ export default function Home() {
                 Casino Zeta
               </span>
             </p>
-            <p className='text-white tracking-tighter my-2 '>Usuarios nuevos 30% de bonificacion</p>
+            <p className="text-white tracking-tighter my-2 ">
+              Usuarios nuevos 30% de bonificacion
+            </p>
             {/*     
             <div className="mt-5">
               <Dialog>
