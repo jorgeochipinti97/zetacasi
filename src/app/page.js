@@ -199,7 +199,7 @@ export default function Home() {
           ref={refInput}
         />
 
-        <div onClick={() => push("https://walink.co/b8029b")}>
+        <div onClick={() => push("https://wa.me/message/LOVOAZ6V6653H1")}>
           <svg
             width={50}
             xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +514,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 className="border border-black"
-                onClick={() => push("https://walink.co/b8029b")}
+                onClick={() => push("https://wa.me/message/LOVOAZ6V6653H1")}
               >
                 ¡Jugar ahora!
               </Button>
