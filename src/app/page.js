@@ -164,7 +164,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    push("https://wa.me/message/LOVOAZ6V6653H1");
+    push("https://wa.link/5xcdt8");
   }, []);
 
   const handleSubmitInput = async (e) => {
@@ -199,7 +199,7 @@ export default function Home() {
           ref={refInput}
         />
 
-        <div onClick={() => push("https://wa.me/message/LOVOAZ6V6653H1")}>
+        <div onClick={() => push("https://wa.link/5xcdt8")}>
           <svg
             width={50}
             xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +514,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 className="border border-black"
-                onClick={() => push("https://wa.me/message/LOVOAZ6V6653H1")}
+                onClick={() => push("https://wa.link/5xcdt8")}
               >
                 ¡Jugar ahora!
               </Button>
